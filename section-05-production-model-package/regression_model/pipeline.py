@@ -8,7 +8,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import Binarizer, MinMaxScaler
 
 from regression_model.config.core import config
-from regression_model.processing import features as pp
+from regression_model.processing import features as pp  # this is a new module created
 
 price_pipe = Pipeline(
     [

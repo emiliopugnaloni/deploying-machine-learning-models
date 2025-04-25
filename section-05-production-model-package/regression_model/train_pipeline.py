@@ -1,6 +1,7 @@
+# **This is the main script to train the model**
 import numpy as np
-from config.core import config
-from pipeline import price_pipe
+from config.core import config #we get the config object 
+from pipeline import price_pipe #we get the pipeline object
 from processing.data_manager import load_dataset, save_pipeline
 from sklearn.model_selection import train_test_split
 

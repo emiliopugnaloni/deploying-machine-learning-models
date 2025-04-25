@@ -1,4 +1,4 @@
-from pathlib import Path
+from pathlib import Path # to set paths
 from typing import Dict, List, Optional, Sequence
 
 from pydantic import BaseModel
@@ -14,7 +14,7 @@ DATASET_DIR = PACKAGE_ROOT / "datasets"
 TRAINED_MODEL_DIR = PACKAGE_ROOT / "trained_models"
 
 
-class AppConfig(BaseModel):
+class AppConfig(BaseModel): # we use pydantic to create a class that will validate the config file
     """
     Application-level config.
     """
@@ -25,7 +25,7 @@ class AppConfig(BaseModel):
     pipeline_save_file: str
 
 
-class ModelConfig(BaseModel):
+class ModelConfig(BaseModel): #this class will have the model config (we separate them from the general config)
     """
     All configuration relevant to model
     training and feature engineering.
@@ -33,7 +33,7 @@ class ModelConfig(BaseModel):
 
     target: str
     variables_to_rename: Dict
-    features: List[str]
+    features: List[str] # we define the type of data of this config element, to prevent errors
     test_size: float
     random_state: int
     alpha: float
@@ -55,12 +55,14 @@ class ModelConfig(BaseModel):
     finish_mappings: Dict[str, int]
 
 
-class Config(BaseModel):
+class Config(BaseModel):  # this is all the config = app and model (the ones created previously)
     """Master config object."""
 
     app_config: AppConfig
     model_config: ModelConfig
 
+
+# Helper Functions
 
 def find_config_file() -> Path:
     """Locate the configuration file."""
@@ -95,5 +97,5 @@ def create_and_validate_config(parsed_config: YAML = None) -> Config:
 
     return _config
 
-
-config = create_and_validate_config()
+#to get the config
+config = create_and_validate_config() #this will return the created Config class object (with al the config)

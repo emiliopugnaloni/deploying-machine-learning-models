@@ -128,5 +128,5 @@ class HouseDataInputSchema(BaseModel):
     ThreeSsnPortch: Optional[int]  # renamed
 
 
-class MultipleHouseDataInputs(BaseModel):
+class MultipleHouseDataInputs(BaseModel): #list of indivudual data-house inputs
     inputs: List[HouseDataInputSchema]

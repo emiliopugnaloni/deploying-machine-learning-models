@@ -1,0 +1,220 @@
+# ================
+# 5.1 INTRODUCTION
+# ================
+
+# 1)ODD Files that we find
+Manifest.in
+mypy.ini
+pyproject.toml
+setup.py
+tox.ini  -> it's where tox installs virtual envs
+
+are things that are needed to build the package: configurations, dependencies, etc.
+
+# 2) Requirements
+we have a requierements directory where we formalize the dependencies of our package (requirements.txt)
+and also for testing (test_requirements.txt)
+
+# 3) Tests Directory
+In the test drectory we have a couple of sample test
+
+# 4)  Regression model directory
+The regression model directory contains the mayority of the functionalities
+
+# 5) Folder structure vs Jupyter Notebook 
+Mapping between the .ipyb notebook and this package: We are not copy-pastyin the code however. It's more of a functionality mapping
+
+# a) Import dependencies (at start of the notebook) 
+-> Now is not at the start, it's when they are needed. It's not an individual modul with all the imports.
+
+# b) Load the trainning data
+-> it's now in regression-model/processing/data_manager.py. Here we have everything to load an save data
+
+# c) Prep train/test data (test split section)
+-> it's in train-pipeline (a bit odd, it's not in the processing module)
+
+# d) Confis (parameters)
+- > it's in 2 places. In regression-models/config.yaml and in regression-models/config/.. module. The last one is to perform some validations of the config. The "config" of the notebook is in the config.yaml
+
+# e) Pipeliene (where the pipeline is set)
+-> it's in the regression-models/pipeline.py
+
+# f) Train the model (fit the pipeline)
+-> it's in regression-models/train_pipelien.py
+
+# g) Evaluate the model (preform predictions and evaluate the model on train & test)
+-> it's in the regression-model/predict.py
+
+# h) Persist the model (save the WHOLE pipeline as pkl)
+-> it's in the regression-model/processing/data-manager.py
+
+# i) Score New Data (predictions on new data)
+-> it's made in test. And it will call for the pipeline, etc there
+
+In the regression-model module we have three key files:
+- pipeline.py: where we define the pipeline
+- train_pipeline.py: where we fit the pipeline and save it
+- predict.py: where we load the pipeline and make predictions
+
+And then we have certain helpers: datasets we need (train and test), trained_models were we saved the models in pickle format to acces them in the future, processing, config
+
+
+# ====================================================
+# 5.2 Understand Reason Behind the Prod. code Structure
+# ====================================================
+
+# How do we know how to structure things and applying to our own project
+
+There are 3 ways of kwnowing how to structure a project:
+Convections
+Packaging mandatory files
+Software engineering best practices
+
+# 1) Conventions: 
+    - Versioning
+    - Config
+    - Pep8/linting tools
+
+There are things that won't throw an error, but are a standard in the industry.
+The most obvious is PEP8 (provides lot of gidelines)
+In python ther are different ways of doing versioning. We have the VERSION file that is one.
+About config, we have the config.yaml file, that is read by a config python module (config/core.py)
+
+# 2) Packaging mandatory files
+Once we decided that we are going to pakcage our module in a Python package, then there are certain file required to do that:
+    - setup.py
+    - manifest.in
+
+¿Why are we packaging our model? Review section 3, but boradly speaking, we are doing it to be able to embeded it in applications. There are other ways of persist and share our models, but this is the most common one.
+
+# 3) Software Engineering Best Practices
+
+# a) For Packages
+If we think about the end user, it's going to be used to train and predict. That's why we separate train and predict
+
+# b) General
+    - Testing: Can you write a single unit test for one specific bit of functionality. For example, the data_manager.py: we have functions to save-pipeline and removing-pipeline. They could be a single function, but now we can test saving and removing the pipeline separately
+    - Separations of Concerns -> Modularity: It's about having a single module that does one thing. For example, the data_manager.py is about loading and saving data. The validation.py is about testist that the inputs are correct. We choose to separete that because they do diff things, and that leads to testing
+    - SOLID principles: The principal is "Single Responsibility Principle". It means that a class or module should have one and only one job. That is whay we tray to do in predict.py (dealing with predict), ...
+    - Maintainability: The code is easy to maintain. For example, if we want to change the way we save the pipeline, we only need to change it in one place (data_manager.py). If we had all the code in one file, it would be harder to maintain.
+    - Optimize the code for redability (this is key also)
+
+
+# ==============================
+# 5.3 Package Requirements File
+# ==============================
+
+We define the compatible version of the packages we ae using. The version follows this structure: Major_Version.Minor_Version.Patch_Version. The major_version changes when it has an update that breaks the previous api
+
+We can install all of this with: pip install -r requirements\requirements.txt
+We can also install the test requirements with: pip install -r requirements\test_requirements.txt
+
+This are separated because the test req are not needed every time
+
+# ======================
+# 5.4 Working with tox - (How to run the tests?)
+# ======================
+
+tox is a tool used in Python projects to automate testing and environment setup. It creates isolated virtual environments, installs the necessary dependencies, and runs specified commands like training a model or executing tests.
+
+In this project (part of a course on deploying ML models), tox is used to:
+
+    - Create a clean environment for testing the model pipeline.
+    - Install dependencies listed in requirements/test_requirements.txt.
+    - Run a training script (train_pipeline.py).
+    - Execute tests using pytest.
+
+The command: "tox -e test_package" runed in the cd outiste Conda (if we are in section_05 folder)
+tells tox to run the test_package environment defined in tox.ini.
+This approach helps ensure the code works independently of your system setup, which is important for reproducibility and deployment.
+We don't need conda here, TOX is responible for creating/managing env
+For this project, we need the python 3.9
+
+tox makes sure your ML code works cleanly, like it would in production or on a colleague's machine.
+You don’t use tox in production — it’s for testing before you go to production.
+You could use Docker later for actual deployment. They are complementary, not mutually exclusive.
+
+Why use tox?
+Think of tox as a tool for testing your project in a clean, controlled environment.
+Its main purposes:
+    Automated testing: Runs your code (e.g. training scripts, tests) in a clean virtual environment.
+    Reproducibility: Everyone running tox (on any computer or CI/CD pipeline) will get the same results.
+    Multiple Python versions (optional): You can configure it to test your code in Python 3.8, 3.9, 3.10... all in one go.
+
+
+# =========================
+# 5.5 Config files
+# =======================
+
+We have a config.yml where all the parameters are defined to out model
+Then we have a config module, that will help us read and validate that the config file is correct.
+There we use a library to create Config classes, that will contain all the parameters and the data type
+If one data-type is wrong, it will throw an error. This is a good practice to avoid errors.
+We also have functions in that module (helpers) to read the config file and proceed validate it
+
+# =========================
+# 5.6 Train Pipelien
+# =======================
+It is the .py that is runned from tox.ini: "python regression_model/train_pipeline.py"
+If we want to understand the train code, start from here. 
+
+# ========================
+# 5.7 Pytest
+# ========================
+
+It's a library to test your code. It is a very common library in the industry. The other one is unittest, but pytest is more common. When saying "test" we refer to validate that the code is producing
+the results that we want it to produce. Ex: square(2) == 4
+
+In the code, we have a test folder. In that we have some test_NAME.py files that have some test_NAME functions. pytest automatically finds those test functions in those .py files and runs them. 
+
+Pytest also understand that conftest.py has some fixtures (functions that are used to set up the test environment) that are going to be imported and used in the modules. (this is only necesary if we have more than 1 test_NAME.pt module, because we can define the fixture in the same if not)
+
+
+# ========================================
+# 5.8 How to use model to make predictions?
+# ========================================
+
+We have a predict.py
+It starts with receiving the data, validate that there aren't nans,  dtypes mismatches, etc
+It returns the ok_data and the errors, and with the ok_data we make the predictions
+
+# ========================
+# 5.9 Building the package
+# =======================
+
+A package is a collection of modules and is usful way of publishing them togehter. To then
+be installed in applications, and make us of the python modules
+
+In this project: the file related to the package are (necessary to build the package and mandatory):
+- pyproject.toml: It contains the metadata and the dependencies of the package. The most important lines are from 1-6 where some req for building the package are defined. (we are not going to write this from scratch)
+- setup.py: here we have a lot of metadata. This is the file that is used to build the package. 
+- manifest.in: it list all the files that are going to be included in the package. 
+
+To create the package, we need to have PyPA's build installed. We can install it with: py -m pip install --upgrade build. 
+
+Then, we have to run this line from where pyproject.toml is located:
+py -m build .
+
+Once we run that, we will have this new folders:
+- dist: where the package is going to be created. We have a .whl file and a .tar.gz file. These are the 2 expected formats for the package. We can then install the package with pip install <package_name>.whl 
+- tid_regression_model.egg-info:
+
+# ========================
+# 5.10 Tools
+# =======================
+
+If we go to test_requirements.txt, we can see that we have 4 tools there.
+black: a code styling enforcement tool
+flake8: it will tell us if we are following the PEP8 guidelines
+mypy: type-cheking tool
+isort: for ensuring that the imports are sorted in te correc orders
+
+Whenever we run tox, it will run all these tools.
+
+The porpose of these tools is to make sure that the code is clean and readable. It will help us to avoid errors in the future.
+(we can run them separately, but we are not going to do that)
+
+
+
+## USEUFL LINKS
+packging: https://packaging.python.org/en/latest/tutorials/packaging-projects/
