@@ -67,4 +67,4 @@ def setup_app_logging(config: Settings) -> None:
     )
 
 
-settings = Settings()
+settings = Settings() # this will load the settings

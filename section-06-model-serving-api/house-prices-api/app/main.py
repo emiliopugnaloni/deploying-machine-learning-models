@@ -20,7 +20,7 @@ root_router = APIRouter()
 
 
 @root_router.get("/")
-def index(request: Request) -> Any:
+def index(request: Request) -> Any: # This gives us a home endpoing
     """Basic HTML response."""
     body = (
         "<html>"

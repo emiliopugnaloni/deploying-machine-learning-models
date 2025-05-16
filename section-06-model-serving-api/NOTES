@@ -1,0 +1,8 @@
+# Run app
+We have to do: tox -e run_app
+The go to localhost:8001/docs an we are going to be in the api. WE can go to the do there and try it out.
+
+We can use the POST method (useful to send data, as opposed with GET that is useful to get) to test the api. The package is being made available and serving predictions
+
+
+# Deploying OUR ML Applicationto Railway

@@ -5,5 +5,6 @@ pydantic>=1.10.4,<1.12.0
 typing_extensions>=4.2.0,<5.0.0
 loguru>=0.5.3,<1.0.0
 # We will explain this in the course
-tid-regression-model>=3.2.0
+#tid-regression-model>=3.2.0 # the model package of the last section (i comment this line  because the package I want to import  mine, not the one that the instructror published on pypi)
+C:/Users/Emilio/deploying-machine-learning-models/section-05-production-model-package/dist/tid_regression_model-0.0.1-py3-none-any.whl
 feature-engine>=1.0.2,<1.6.0  # breaking change in v1.6.0
