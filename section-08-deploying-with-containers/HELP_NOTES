@@ -1,0 +1,7 @@
+Para creal la imagen, se poner docker build en la carpeta donde esta el Dockerfile:
+docker build --build-arg PIP_EXTRA_INDEX_URL=https://f8SrEPTFa9r5qhUJAe4Y:@pypi.fury.io/emiliopugnaloni/ -t house-prices-api:latest .
+
+Then, we can see the image with: docker images
+We can run the image with: docker run -p 8001:8001 -e PORT=8001 house-prices-api:latest
+Al crear una imagen, estamos creando un contendeor (funciona como imagenes = clases, contenedores = objetos o instancias de la clase)
+En el docker file, necesitamos parametros (PIP_EXTRA_INDEX_URL) para poder instalar las dependencias.
