@@ -1,0 +1,25 @@
+We have the .cicleci folder in top. This are configs necesary to run thisng in circleci
+We have Jobs and Workflows
+we have some ENV variables that are used in the config.yml file We ned to set them in the circleci project settings
+Then we have Gemfury in model-package of section 07. This is to publish model
+We have a publish_model step in the .tox of model_package
+
+The puslibsh_model is not something to put to much atention. But there we are builiding our package with wheel
+
+In the cicleci/congi:
+The test and upload regression mode will run only when we create a tag in github.
+It a specific thing that we can trigger in git. And it gives a differnce from a nomral pull-req, or a normal merge to maseter branch
+
+First we are going to fecth the data from kaggle
+Then we can run the test (this is done with the tox commands). We are doing more test (get data, publish package to gemfury)
+And the last part is publish our model
+
+In summary, our workflows would be that in our model package we would make some changes, then we uupdate the model_pakage/regression_model/trained_models/VERSION string,
+open a pull request, the test would run, we merge the pullrequest and create a tag, and that would trigger a publish job.
+
+
+
+
+
+To run everything, we need to establish env variables in circleci project settings
+GEMFURY_PUSH_URL = https://TOKEN:@pypi.fury.io/USERNAME/
