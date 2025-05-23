@@ -18,7 +18,7 @@ In summary, our workflows would be that in our model package we would make some 
 open a pull request, the test would run, we merge the pullrequest and create a tag, and that would trigger a publish job.
 
 
-....
+.......
 
 
 To run everything, we need to establish env variables in circleci project settings
